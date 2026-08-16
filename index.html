@@ -1,69 +1,633 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>A Little Question 💌</title>
-<style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;overflow:hidden;font-family:Arial,sans-serif;color:#35263b;background:linear-gradient(135deg,#ffdce9,#e8ddff)}
-.card{width:min(92vw,540px);min-height:430px;padding:42px 28px;text-align:center;background:rgba(255,255,255,.94);border-radius:30px;box-shadow:0 20px 70px #46285a33;position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center}
-.emoji{font-size:56px;margin-bottom:8px}h1{font-size:clamp(28px,7vw,44px);margin:0 0 14px}p{font-size:18px;line-height:1.55;margin:10px 0}.buttons{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:25px}
-button{border:0;border-radius:999px;padding:14px 27px;font-size:17px;font-weight:700;cursor:pointer;transition:all .35s ease}.yes{background:#ff5d8f;color:#fff;box-shadow:0 9px 25px #ff5d8f55}.no,.secondary{background:#eee7f5;color:#4b3c55}
-.step{display:none}.step.active{display:block}.time-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0}.time{background:#f7f1fb;border:2px solid transparent;padding:15px;border-radius:16px;font-weight:700;cursor:pointer}.time.selected{border-color:#ff5d8f;background:#fff0f5}
-#message{display:none;margin-top:20px;padding:15px;border-radius:18px;background:#fff0f5;font-weight:700}.heart{position:fixed;bottom:-30px;animation:float 5s linear forwards;z-index:1;pointer-events:none}@keyframes float{to{transform:translateY(-110vh) rotate(360deg);opacity:0}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Little Question 🌹</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #fff1f5, #ffe4ec, #fff8f3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      color: #4a2630;
+    }
+
+    .container {
+      width: min(92%, 620px);
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.9);
+      border-radius: 28px;
+      padding: 35px 25px;
+      box-shadow: 0 15px 45px rgba(100, 30, 50, 0.15);
+      animation: fadeIn 0.8s ease;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 13px 24px;
+      margin: 8px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .primary {
+      background: #e85d75;
+      color: white;
+    }
+
+    .primary:hover {
+      transform: scale(1.05);
+      background: #d94b65;
+    }
+
+    .secondary {
+      background: #f1dfe4;
+      color: #63333f;
+    }
+
+    .secondary:hover {
+      transform: scale(1.04);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .question {
+      animation: slideIn 0.5s ease;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .option {
+      background: #fff;
+      border: 2px solid #f0b7c3;
+      color: #63333f;
+    }
+
+    .option.selected {
+      background: #e85d75;
+      color: white;
+      border-color: #e85d75;
+    }
+
+    input,
+    select {
+      width: min(100%, 350px);
+      padding: 13px;
+      border-radius: 12px;
+      border: 2px solid #f0b7c3;
+      outline: none;
+      background: white;
+    }
+
+    /* Rose */
+    .rose {
+      position: relative;
+      width: 130px;
+      height: 150px;
+      margin: 0 auto 15px;
+    }
+
+    .stem {
+      position: absolute;
+      width: 6px;
+      height: 100px;
+      background: #4e9b57;
+      bottom: 0;
+      left: 62px;
+      border-radius: 10px;
+    }
+
+    .leaf {
+      position: absolute;
+      width: 35px;
+      height: 18px;
+      background: #5eaa61;
+      border-radius: 100% 0 100% 0;
+      bottom: 45px;
+      left: 30px;
+      transform: rotate(-25deg);
+    }
+
+    .leaf.two {
+      left: 66px;
+      transform: rotate(25deg) scaleX(-1);
+    }
+
+    .flower {
+      position: absolute;
+      left: 36px;
+      bottom: 75px;
+      width: 55px;
+      height: 55px;
+      background: #e85d75;
+      border-radius: 50%;
+      box-shadow:
+        15px 0 #ef7187,
+        -15px 0 #ef7187,
+        0 15px #d94b65,
+        0 -15px #f27f91;
+      animation: bloom 2s ease forwards;
+      transform: scale(0.1);
+    }
+
+    .flower::after {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #b93650;
+      border-radius: 50%;
+      top: 17px;
+      left: 17px;
+    }
+
+    /* Cat */
+    .cat {
+      font-size: 70px;
+      margin: 10px;
+      animation: catBounce 2s infinite;
+    }
+
+    .cat-message {
+      min-height: 30px;
+      font-weight: 600;
+      color: #b43f57;
+    }
+
+    .progress {
+      height: 7px;
+      background: #f5dce2;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 20%;
+      background: #e85d75;
+      transition: width 0.4s ease;
+    }
+
+    .outro {
+      animation: fadeIn 1.2s ease;
+    }
+
+    .heart {
+      font-size: 45px;
+      animation: heartbeat 1.3s infinite;
+    }
+
+    @keyframes bloom {
+      0% {
+        transform: scale(0.1) rotate(-20deg);
+      }
+      70% {
+        transform: scale(1.15) rotate(5deg);
+      }
+      100% {
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    @keyframes catBounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-7px);
+      }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
+
 <body>
-<main class="card">
-<section class="step active" id="step1">
-<div class="emoji">🌸</div><h1>Can I ask you something?</h1>
-<p>First things first...</p><p><strong>Are you comfortable while talking to me?</strong></p>
-<div class="buttons"><button class="yes" onclick="answerComfort('Yes');next(2)">Yes 😊</button><button class="no" onclick="answerComfort('Not really');next(2)">Not really</button></div>
-</section>
 
-<section class="step" id="step2">
-<div class="emoji">💌</div><h1>Okay, one more thing...</h1>
-<p><strong>I really wanted to meet you and ask you out.</strong></p><p>So... would you like to go out with me?</p>
-<div class="buttons"><button class="yes" id="yesBtn" onclick="answerOut('Yes');next(3);hearts()">Yes 💖</button><button class="no" id="noBtn" onclick="answerOut('No');growYes()">No 😅</button></div>
-<div id="message">Hmm... I think the “Yes” button is getting harder to ignore 😄</div>
-</section>
+<div class="container">
+  <div class="card">
 
-<section class="step" id="step3">
-<div class="emoji">🗓️</div><h1>Let's pick a time</h1><p><strong>17 August 2026</strong></p><p>What time would work best for you?</p>
-<div class="time-grid">
-<button class="time" onclick="selectTime(this)">4:00 PM</button><button class="time" onclick="selectTime(this)">5:00 PM</button><button class="time" onclick="selectTime(this)">6:00 PM</button><button class="time" onclick="selectTime(this)">7:00 PM</button>
+    <!-- INTRO -->
+    <section id="intro">
+      <div class="rose">
+        <div class="stem"></div>
+        <div class="leaf"></div>
+        <div class="leaf two"></div>
+        <div class="flower"></div>
+      </div>
+
+      <h1>A Little Question 🌹</h1>
+
+      <div class="cat">🐱</div>
+
+      <p>
+        Before we begin... this little cat has something to ask you.
+      </p>
+
+      <button class="primary" onclick="startQuiz()">
+        Let's begin ✨
+      </button>
+    </section>
+
+
+    <!-- QUESTIONS -->
+    <section id="quiz" class="hidden">
+
+      <div class="progress">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <div class="cat" id="cat">🐱</div>
+      <div class="cat-message" id="catMessage">
+        Meow... let's see what you think.
+      </div>
+
+      <!-- Q1 -->
+      <div id="q1" class="question">
+        <h1>Question 1</h1>
+        <p>Are you comfortable while talking to me? 😊</p>
+
+        <button class="primary" onclick="answerQ1('Yes')">
+          Yes 😊
+        </button>
+
+        <button class="secondary" onclick="answerQ1('A little')">
+          A little
+        </button>
+      </div>
+
+
+      <!-- Q2 -->
+      <div id="q2" class="question hidden">
+        <h1>Question 2</h1>
+
+        <p>
+          I really wanted to meet you and ask you out...
+          Would you like to go out with me? 🌷
+        </p>
+
+        <button
+          id="yesButton"
+          class="primary"
+          onclick="answerQ2('Yes')">
+          Yes 💗
+        </button>
+
+        <button
+          class="secondary"
+          onclick="answerNo()">
+          No
+        </button>
+      </div>
+
+
+      <!-- Q3 -->
+      <div id="q3" class="question hidden">
+        <h1>Question 3</h1>
+
+        <p>What would you prefer? 🍽️</p>
+
+        <div class="options">
+          <button class="option" onclick="chooseOption(this, 'Meal')">
+            🍝 Meal
+          </button>
+
+          <button class="option" onclick="chooseOption(this, 'Cold drinks')">
+            🥤 Cold drinks
+          </button>
+
+          <button class="option" onclick="chooseOption(this, 'No meal')">
+            🙂 No meal
+          </button>
+        </div>
+
+        <button class="primary" onclick="nextQuestion(4)">
+          Continue
+        </button>
+      </div>
+
+
+      <!-- Q4 -->
+      <div id="q4" class="question hidden">
+        <h1>Question 4</h1>
+
+        <p>Where would you prefer to meet? 📍</p>
+
+        <div class="options">
+          <button class="option" onclick="chooseOption(this, 'Basketball court')">
+            🏀 Basketball court
+          </button>
+
+          <button class="option" onclick="chooseOption(this, 'Cafeteria')">
+            ☕ Cafeteria
+          </button>
+
+          <button class="option" onclick="chooseOption(this, 'Lecture hall')">
+            📚 Lecture hall
+          </button>
+        </div>
+
+        <input
+          id="otherPlace"
+          type="text"
+          placeholder="Other place (optional)"
+        >
+
+        <br><br>
+
+        <button class="primary" onclick="nextQuestion(5)">
+          Continue
+        </button>
+      </div>
+
+
+      <!-- Q5 -->
+      <div id="q5" class="question hidden">
+        <h1>Final Question 🌸</h1>
+
+        <p>
+          Pick a time for <strong>17 August 2026</strong>.
+        </p>
+
+        <select id="time">
+          <option value="">Choose a time</option>
+          <option>10:00 AM</option>
+          <option>12:00 PM</option>
+          <option>2:00 PM</option>
+          <option>4:00 PM</option>
+          <option>6:00 PM</option>
+        </select>
+
+        <br><br>
+
+        <button class="primary" onclick="finish()">
+          Finish 💗
+        </button>
+      </div>
+
+
+      <!-- OUTRO -->
+      <div id="outro" class="outro hidden">
+
+        <div class="heart">💗</div>
+
+        <h1>And that's it...</h1>
+
+        <div class="cat">😺</div>
+
+        <p>
+          Whatever you choose, thank you for taking the time
+          to answer these little questions.
+        </p>
+
+        <p>
+          Maybe 17 August 2026 can become a small,
+          happy memory. 🌷
+        </p>
+
+        <p>
+          No pressure, no expectations —
+          just a nice conversation and hopefully a good time.
+        </p>
+
+        <h2>See you around? ✨</h2>
+
+      </div>
+
+    </section>
+
+  </div>
 </div>
-<button class="yes" onclick="finish()">That works ✨</button>
-</section>
 
-<section class="step" id="step4">
-<div class="emoji">✨</div><h1>Then it's a plan.</h1>
-<p><strong>Some people make ordinary days feel a little more special.</strong></p>
-<p>I’d really like to spend a little time with you, laugh, talk, and make a nice memory together. 🌷</p>
-<p><strong>See you on 17 August. 💖</strong></p><div id="chosen"></div>
-</section>
-</main>
 
 <script>
-/* Paste your deployed Google Apps Script Web App URL here. */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxf-UrQHeUpP61aatGHrt89qA_GBEJGYH2vOchUUr4_QY-P5ghsnw6uhvvesFzT8hzA/exec";
 
-let yesSize=1, selectedTime="", response={comfort:"",out:"",time:""};
+  let currentQuestion = 1;
+  let selectedFood = "";
+  let selectedPlace = "";
 
-function sendResponse(){
-  if(SCRIPT_URL.includes("PASTE_YOUR")){
-    console.warn("Google Apps Script URL has not been configured.");
-    return;
+  const answers = {};
+
+  function startQuiz() {
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+
+    showQuestion(1);
+
+    catReact("👀", "Okay... here we go!");
   }
-  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(response)}).catch(()=>{});
-}
-function answerComfort(v){response.comfort=v}
-function answerOut(v){response.out=v}
-function next(n){document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));document.getElementById("step"+n).classList.add("active")}
-function growYes(){yesSize=Math.min(2.5,yesSize+.28);document.getElementById("yesBtn").style.transform=`scale(${yesSize})`;document.getElementById("noBtn").style.opacity=Math.max(.2,1-yesSize/3);document.getElementById("message").style.display="block"}
-function selectTime(el){document.querySelectorAll(".time").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");selectedTime=el.textContent}
-function finish(){if(!selectedTime){alert("Pick a time first 😊");return}response.time=selectedTime;sendResponse();document.getElementById("chosen").innerHTML=`<p><strong>17 August 2026 · ${selectedTime}</strong></p>`;next(4);hearts(40)}
-function hearts(count=22){for(let i=0;i<count;i++){const h=document.createElement("div");h.className="heart";h.textContent=["💖","💕","💗","✨","🌸"][Math.floor(Math.random()*5)];h.style.left=Math.random()*100+"vw";h.style.fontSize=(18+Math.random()*20)+"px";h.style.animationDuration=(3+Math.random()*3)+"s";document.body.appendChild(h);setTimeout(()=>h.remove(),6500)}}
+
+
+  function showQuestion(number) {
+
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById("q" + i).classList.add("hidden");
+    }
+
+    document.getElementById("q" + number).classList.remove("hidden");
+
+    currentQuestion = number;
+
+    document.getElementById("progressBar").style.width =
+      (number * 20) + "%";
+  }
+
+
+  function answerQ1(answer) {
+
+    answers.comfortable = answer;
+
+    catReact("😸", "Aww, that's good to hear!");
+
+    setTimeout(() => {
+      showQuestion(2);
+    }, 700);
+  }
+
+
+  function answerQ2(answer) {
+
+    answers.askOut = answer;
+
+    catReact("😻", "The cat approves!");
+
+    setTimeout(() => {
+      showQuestion(3);
+    }, 700);
+  }
+
+
+  function answerNo() {
+
+    const button = document.getElementById("yesButton");
+
+    let currentSize =
+      parseFloat(getComputedStyle(button).fontSize);
+
+    if (currentSize < 28) {
+      button.style.fontSize = (currentSize + 2) + "px";
+      button.style.padding = "15px 28px";
+    }
+
+    catReact("🙀", "Oh! The cat heard that!");
+
+    // No remains available.
+  }
+
+
+  function chooseOption(button, value) {
+
+    const parent = button.parentElement;
+
+    parent.querySelectorAll(".option")
+      .forEach(btn => btn.classList.remove("selected"));
+
+    button.classList.add("selected");
+
+    if (currentQuestion === 3) {
+      selectedFood = value;
+      answers.food = value;
+
+      catReact("😋", value + "? Good choice!");
+    }
+
+    if (currentQuestion === 4) {
+      selectedPlace = value;
+      answers.place = value;
+
+      catReact("🐱", "That sounds nice!");
+    }
+  }
+
+
+  function nextQuestion(number) {
+
+    if (number === 4 && !selectedFood) {
+      catReact("🤔", "Pick one first!");
+      return;
+    }
+
+    if (number === 5) {
+
+      const other =
+        document.getElementById("otherPlace").value.trim();
+
+      if (other) {
+        answers.place = other;
+      } else if (!selectedPlace) {
+        catReact("🤔", "Pick a place first!");
+        return;
+      }
+    }
+
+    showQuestion(number);
+
+    catReact("🐱", "Next question!");
+  }
+
+
+  function finish() {
+
+    const time = document.getElementById("time").value;
+
+    if (!time) {
+      catReact("🤔", "Pick a time first!");
+      return;
+    }
+
+    answers.time = time;
+
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById("q" + i)
+        .classList.add("hidden");
+    }
+
+    document.getElementById("progressBar")
+      .style.width = "100%";
+
+    document.getElementById("outro")
+      .classList.remove("hidden");
+
+    catReact("😽", "Mission accomplished!");
+  }
+
+
+  function catReact(face, message) {
+
+    document.getElementById("cat").textContent = face;
+    document.getElementById("catMessage").textContent = message;
+  }
+
 </script>
+
 </body>
 </html>
