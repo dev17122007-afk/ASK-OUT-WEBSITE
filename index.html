@@ -475,7 +475,7 @@
   let selectedFood = "";
   let selectedPlace = "";
 
-  const answers = {};
+  const answers. = {};
 
   function startQuiz() {
     document.getElementById("intro").classList.add("hidden");
@@ -504,7 +504,7 @@
 
   function answerQ1(answer) {
 
-    answers.comfortable = answer;
+    answers[comfortable = answer;
 
     catReact("😸", "Aww, that's good to hear!");
 
@@ -598,13 +598,15 @@
   function finish() {
 
     const time = document.getElementById("time").value;
-
+    const date = document.getElementById("date").value;
+    
     if (!time) {
       catReact("🤔", "Pick a time first!");
       return;
     }
 
     answers.time = time;
+    answers.date = date;
     
     fetch("https://script.google.com/macros/s/AKfycbxf-UrQHeUpP61aatGHrt89qA_GBEJGYH2vOchUUr4_QY-P5ghsnw6uhvvesFzT8hzA/exec", {
   method: "POST",
