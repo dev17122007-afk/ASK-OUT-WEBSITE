@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>A Little Question 💌</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;overflow:hidden;font-family:Arial,sans-serif;color:#35263b;background:linear-gradient(135deg,#ffdce9,#e8ddff)}
+.card{width:min(92vw,540px);min-height:430px;padding:42px 28px;text-align:center;background:rgba(255,255,255,.94);border-radius:30px;box-shadow:0 20px 70px #46285a33;position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center}
+.emoji{font-size:56px;margin-bottom:8px}h1{font-size:clamp(28px,7vw,44px);margin:0 0 14px}p{font-size:18px;line-height:1.55;margin:10px 0}.buttons{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:25px}
+button{border:0;border-radius:999px;padding:14px 27px;font-size:17px;font-weight:700;cursor:pointer;transition:all .35s ease}.yes{background:#ff5d8f;color:#fff;box-shadow:0 9px 25px #ff5d8f55}.no,.secondary{background:#eee7f5;color:#4b3c55}
+.step{display:none}.step.active{display:block}.time-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:22px 0}.time{background:#f7f1fb;border:2px solid transparent;padding:15px;border-radius:16px;font-weight:700;cursor:pointer}.time.selected{border-color:#ff5d8f;background:#fff0f5}
+#message{display:none;margin-top:20px;padding:15px;border-radius:18px;background:#fff0f5;font-weight:700}.heart{position:fixed;bottom:-30px;animation:float 5s linear forwards;z-index:1;pointer-events:none}@keyframes float{to{transform:translateY(-110vh) rotate(360deg);opacity:0}}
+</style>
+</head>
+<body>
+<main class="card">
+<section class="step active" id="step1">
+<div class="emoji">🌸</div><h1>Can I ask you something?</h1>
+<p>First things first...</p><p><strong>Are you comfortable while talking to me?</strong></p>
+<div class="buttons"><button class="yes" onclick="answerComfort('Yes');next(2)">Yes 😊</button><button class="no" onclick="answerComfort('Not really');next(2)">Not really</button></div>
+</section>
+
+<section class="step" id="step2">
+<div class="emoji">💌</div><h1>Okay, one more thing...</h1>
+<p><strong>I really wanted to meet you and ask you out.</strong></p><p>So... would you like to go out with me?</p>
+<div class="buttons"><button class="yes" id="yesBtn" onclick="answerOut('Yes');next(3);hearts()">Yes 💖</button><button class="no" id="noBtn" onclick="answerOut('No');growYes()">No 😅</button></div>
+<div id="message">Hmm... I think the “Yes” button is getting harder to ignore 😄</div>
+</section>
+
+<section class="step" id="step3">
+<div class="emoji">🗓️</div><h1>Let's pick a time</h1><p><strong>17 August 2026</strong></p><p>What time would work best for you?</p>
+<div class="time-grid">
+<button class="time" onclick="selectTime(this)">4:00 PM</button><button class="time" onclick="selectTime(this)">5:00 PM</button><button class="time" onclick="selectTime(this)">6:00 PM</button><button class="time" onclick="selectTime(this)">7:00 PM</button>
+</div>
+<button class="yes" onclick="finish()">That works ✨</button>
+</section>
+
+<section class="step" id="step4">
+<div class="emoji">✨</div><h1>Then it's a plan.</h1>
+<p><strong>Some people make ordinary days feel a little more special.</strong></p>
+<p>I’d really like to spend a little time with you, laugh, talk, and make a nice memory together. 🌷</p>
+<p><strong>See you on 17 August. 💖</strong></p><div id="chosen"></div>
+</section>
+</main>
+
+<script>
+/* Paste your deployed Google Apps Script Web App URL here. */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxf-UrQHeUpP61aatGHrt89qA_GBEJGYH2vOchUUr4_QY-P5ghsnw6uhvvesFzT8hzA/exec";
+
+let yesSize=1, selectedTime="", response={comfort:"",out:"",time:""};
+
+function sendResponse(){
+  if(SCRIPT_URL.includes("PASTE_YOUR")){
+    console.warn("Google Apps Script URL has not been configured.");
+    return;
+  }
+  fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(response)}).catch(()=>{});
+}
+function answerComfort(v){response.comfort=v}
+function answerOut(v){response.out=v}
+function next(n){document.querySelectorAll(".step").forEach(s=>s.classList.remove("active"));document.getElementById("step"+n).classList.add("active")}
+function growYes(){yesSize=Math.min(2.5,yesSize+.28);document.getElementById("yesBtn").style.transform=`scale(${yesSize})`;document.getElementById("noBtn").style.opacity=Math.max(.2,1-yesSize/3);document.getElementById("message").style.display="block"}
+function selectTime(el){document.querySelectorAll(".time").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");selectedTime=el.textContent}
+function finish(){if(!selectedTime){alert("Pick a time first 😊");return}response.time=selectedTime;sendResponse();document.getElementById("chosen").innerHTML=`<p><strong>17 August 2026 · ${selectedTime}</strong></p>`;next(4);hearts(40)}
+function hearts(count=22){for(let i=0;i<count;i++){const h=document.createElement("div");h.className="heart";h.textContent=["💖","💕","💗","✨","🌸"][Math.floor(Math.random()*5)];h.style.left=Math.random()*100+"vw";h.style.fontSize=(18+Math.random()*20)+"px";h.style.animationDuration=(3+Math.random()*3)+"s";document.body.appendChild(h);setTimeout(()=>h.remove(),6500)}}
+</script>
+</body>
+</html>
